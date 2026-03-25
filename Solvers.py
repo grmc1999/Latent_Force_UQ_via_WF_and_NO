@@ -152,6 +152,49 @@ class FiredrakeTimeStepper(ABC):
         self.t = 0.0
 
 
+class ImplicitDiffusionStepper(FiredrakeTimeStepper):
+    """
+    u_t - div(k grad u) = f
+    Backward Euler:
+        (u^{n+1} - u^n)/dt - div(k grad u^{n+1}) = f
+    """
+
+    def __init__(
+        self,
+        mesh: fd.MeshGeometry,
+        dt: float,
+        point_evaluator: np.ndarray = None,
+        diffusivity: float = 1.0,
+        forcing: float = 0.0,
+        degree: int = 1,
+        solver_parameters: Optional[dict] = None,
+    ):
+        self.degree = degree
+        self.k = fd.Constant(diffusivity)
+        self.f = fd.Constant(forcing)
+        super().__init__(
+            mesh=mesh,
+            dt=dt,
+            point_evaluator = point_evaluator,
+            solver_parameters=solver_parameters
+            )
+
+    def build_function_space(self, mesh):
+        return fd.FunctionSpace(mesh, "CG", self.degree)
+
+    def build_bcs(self):
+        # Replace as needed
+        return [fd.DirichletBC(self.V, fd.Constant(0.0), "on_boundary")]
+
+    def residual(self, u_np1: fd.Function, u_n: fd.Function, f_n: fd.Function):
+        v = fd.TestFunction(self.V)
+
+        return (
+            ((u_np1 - u_n) / self.dt) * v * fd.dx
+            + self.k * fd.dot(fd.grad(u_np1), fd.grad(v)) * fd.dx
+            - f_n * v * fd.dx
+        )
+
 # ---------------------------------------------------------------------------
 # Mesh factory helpers
 # ---------------------------------------------------------------------------
