@@ -56,7 +56,7 @@ from ForceGenerator import (
     ObservationGenerator,
     make_pytorch_dataset,
 )
-from Solvers import TimeDependentPDESolver, MeshFactory
+from Solvers import ImplicitDiffusionStepper, MeshFactory
 import firedrake as fd
 
 # ---------------------------------------------------------------------------
