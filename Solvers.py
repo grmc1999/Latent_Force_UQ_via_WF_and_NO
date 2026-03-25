@@ -150,6 +150,7 @@ class FiredrakeTimeStepper(ABC):
         self.u.assign(fd.Constant(0.0))
         self.u_prev.assign(fd.Constant(0.0))
         self.t = 0.0
+        return None
 
 
 class ImplicitDiffusionStepper(FiredrakeTimeStepper):
