@@ -225,26 +225,24 @@ class LatentForceEstimationPipeline:
 
     def _init_solver(self):
         """Lazily build the Firedrake PDE solver."""
-        from pde_solver import TimeDependentPDESolver, MeshFactory
-        import firedrake as fd
 
         mesh = MeshFactory.unit_square(self.cfg.mesh_nx, self.cfg.mesh_ny)
         adv = tuple(self.cfg.advection_velocity) if self.cfg.advection_velocity else None
 
-        self._solver = TimeDependentPDESolver(
+        self._solver = ImplicitDiffusionStepper(
             mesh=mesh,
             dt=self.cfg.dt,
             theta=self.cfg.theta,
             diffusivity=self.cfg.diffusivity,
-            advection_velocity=adv,
-            pde_type=self.cfg.pde_type,
-            reaction_rate=self.cfg.reaction_rate,
+            #advection_velocity=adv,
+            #pde_type=self.cfg.pde_type,
+            #reaction_rate=self.cfg.reaction_rate,
         )
 
-        # Zero Dirichlet on all boundaries by default
-        self._solver.set_boundary_conditions({1: fd.Constant(0.0), 2: fd.Constant(0.0),
-                                              3: fd.Constant(0.0), 4: fd.Constant(0.0)})
-        self._solver.set_initial_condition(fd.Constant(0.0))
+        # Zero Dirichlet on all boundaries by default # TODO
+        #self._solver.set_boundary_conditions({1: fd.Constant(0.0), 2: fd.Constant(0.0),
+        #                                      3: fd.Constant(0.0), 4: fd.Constant(0.0)})
+        #self._solver.set_initial_condition(fd.Constant(0.0))
 
     # ------------------------------------------------------------------
     # Data generation
@@ -271,17 +269,17 @@ class LatentForceEstimationPipeline:
         n_st = n_steps or self.cfg.n_steps_per_real
 
         self._init_solver()
-        coords = self._solver.get_dof_coordinates()
+        #coords = self._solver.get_dof_coordinates()
 
         # Build force generator
-        if self.cfg.force_type == "random_field":
-            self._force_gen = RandomFieldForce(
-                coords, seed=seed, **self.cfg.force_kwargs
-            )
-        else:
-            self._force_gen = ForceGeneratorFactory.build(
-                self.cfg.force_type, **self.cfg.force_kwargs
-            )
+        #if self.cfg.force_type == "random_field":
+        #    self._force_gen = RandomFieldForce(
+        #        coords, seed=seed, **self.cfg.force_kwargs
+        #    )
+        #else:
+        self._force_gen = ForceGeneratorFactory.build(
+            self.cfg.force_type, **self.cfg.force_kwargs
+        )
 
         self._obs_gen = ObservationGenerator(
             pde_solver=self._solver,
