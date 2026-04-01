@@ -46,6 +46,10 @@ class FiredrakeTimeStepper(ABC):
         ...
 
     @abstractmethod
+    def build_ic(self):
+        ...
+
+    @abstractmethod
     def residual(self, u_np1: fd.Function, u_n: fd.Function, f_n: fd.Function):
         """
         Return the weak residual F(u_{n+1}; v, u_n) = 0 for one implicit step.
@@ -145,10 +149,10 @@ class FiredrakeTimeStepper(ABC):
                 print("placeholder")
         return snapshots
 
-    def reset(self) -> None:
+    def reset(self, f: Optional[fd.Function] = None) -> None:
         """Reset solution and time to initial state."""
-        self.u.assign(fd.Constant(0.0))
-        self.u_prev.assign(fd.Constant(0.0))
+        self.u = self.build_ic(f)
+        self.u_prev = self.build_ic(f)
         self.t = 0.0
         return None
 
@@ -186,6 +190,14 @@ class ImplicitDiffusionStepper(FiredrakeTimeStepper):
     def build_bcs(self):
         # Replace as needed
         return [fd.DirichletBC(self.V, fd.Constant(0.0), "on_boundary")]
+    
+    def build_ic(self, f: Optional[fd.Function] = None):
+        # Replace as needed
+        if f:
+            fd.Function(self.V).interpolate(f)
+        else:
+            fd.Function(self.V).interpolate(fd.Constant(0.0))
+        return fd.Function(self.V).interpolate(fd.Constant(0.0))
 
     def residual(self, u_np1: fd.Function, u_n: fd.Function, f_n: fd.Function):
         v = fd.TestFunction(self.V)
