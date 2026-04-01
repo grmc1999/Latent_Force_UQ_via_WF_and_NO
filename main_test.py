@@ -1,11 +1,11 @@
-from Latent_Force_UQ_via_WF_and_NO import Solvers,StatisticalModels
+from src.Latent_Force_UQ_via_WF_and_NO import Solvers,StatisticalModels
 import importlib
-from Latent_Force_UQ_via_WF_and_NO import Solvers
-from Latent_Force_UQ_via_WF_and_NO.Solvers import ImplicitDiffusionStepper
+from src.Latent_Force_UQ_via_WF_and_NO import Solvers
+from src.Latent_Force_UQ_via_WF_and_NO.Solvers import ImplicitDiffusionStepper
 import firedrake as fd
 import numpy as np
 from typing import Optional
-from Latent_Force_UQ_via_WF_and_NO.LFEstimation import PipelineConfig, ForceGeneratorFactory, LatentForceEstimationPipeline
+from src.Latent_Force_UQ_via_WF_and_NO.LFEstimation import PipelineConfig, ForceGeneratorFactory, LatentForceEstimationPipeline
 
 if __name__ == "__main__":
 
