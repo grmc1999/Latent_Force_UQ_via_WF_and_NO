@@ -232,7 +232,7 @@ class LatentForceEstimationPipeline:
         self._solver = ImplicitDiffusionStepper(
             mesh=mesh,
             dt=self.cfg.dt,
-            theta=self.cfg.theta,
+            #theta=self.cfg.theta,
             diffusivity=self.cfg.diffusivity,
             #advection_velocity=adv,
             #pde_type=self.cfg.pde_type,
