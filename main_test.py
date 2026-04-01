@@ -7,6 +7,12 @@ import numpy as np
 from typing import Optional
 from src.LFEstimation import PipelineConfig, ForceGeneratorFactory, LatentForceEstimationPipeline
 
+from firedrake.adjoint import continue_annotation
+from firedrake import ml
+from firedrake.ml import pytorch
+
+import torch
+
 if __name__ == "__main__":
 
     ForceGeneratorFactory.build("pulse")
