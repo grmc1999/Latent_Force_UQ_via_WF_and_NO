@@ -44,9 +44,9 @@ try:
 except ImportError:
     TORCH_AVAILABLE = False
 
-from StatisticalModels import Trainer, LatentForceModel
+from src.StatisticalModels import Trainer, LatentForceModel
 
-from ForceGenerator import (
+from src.ForceGenerator import (
     BaseForceGenerator,
     GaussianBumpForce,
     SinusoidalForce,
@@ -56,7 +56,7 @@ from ForceGenerator import (
     ObservationGenerator,
     make_pytorch_dataset,
 )
-from Solvers import ImplicitDiffusionStepper, MeshFactory
+from src.Solvers import ImplicitDiffusionStepper, MeshFactory
 import firedrake as fd
 
 # ---------------------------------------------------------------------------
