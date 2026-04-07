@@ -56,6 +56,10 @@ class FiredrakeTimeStepper(ABC):
         """
         ...
 
+    
+    def get_dof_coordinates(self):
+        return fd.Function(fd.VectorFunctionSpace(self.V.mesh(), 'CG', 1)).interpolate(fd.SpatialCoordinate(self.V)).dat.data
+
     def step(self, u_n: fd.Function, f_n: fd.Function) -> fd.Function:
         """
         Pure Firedrake step: u_n -> u_{n+1}

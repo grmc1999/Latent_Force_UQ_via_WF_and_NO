@@ -21,6 +21,6 @@ if __name__ == "__main__":
 
     ph_model = ImplicitDiffusionStepper(mesh = mesh, dt = 0.1)
     step_op = ph_model.build_torch_step_operator()
-    breakpoint()
     pipe = LatentForceEstimationPipeline.from_config(PipelineConfig())
+    breakpoint()
     pipe.generate_data(n_realisations=100, n_steps=50)
